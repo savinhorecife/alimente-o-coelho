@@ -11,4 +11,8 @@ class Link{
         })
         World.add(world,this.link)
     }
+
+    soltarlink(){
+        World.remove(world,this.link)
+    }
 }

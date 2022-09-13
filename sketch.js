@@ -7,11 +7,20 @@ const Body = Matter.Body;
 const Composites = Matter.Composites;
 const Composite = Matter.Composite;
 
+var botao;
+
 var engine;
 var world;
 
-var solo, corda, fruta;
+var solo, corda, fruta,coelho;
 var frutalink;
+var bgImg, frutaImg, coelhoImg;
+
+function preload(){
+  bgImg = loadImage("./assets/background.png");
+  frutaImg = loadImage("./assets/melon.png");
+  coelhoImg = loadImage("./assets/blink_1.png");
+}
 
 function setup() 
 {
@@ -24,13 +33,28 @@ function setup()
 
   //criar a fruta
   //fazer parte da composição
-fruta=Bodies.circle(300,300,15);
-Matter.Composite.add(corda.body,fruta)
+  fruta=Bodies.circle(300,300,15);
+  Matter.Composite.add(corda.body,fruta)
 
-//prendendo a fruta na corda
-frutalink=new Link(corda,fruta)
+  //prendendo a fruta na corda
+  frutalink=new Link(corda,fruta);
+
+
+  //criando o coelhinho
+  coelho = createSprite(250,510,100,100);
+  coelho.addImage(coelhoImg);
+  coelho.scale = 0.2;
+
+
+  //criar o botão que vai cortar a corda e derrubar a fruta
+  botao=createImg("./assets/cut_btn.png")
+  botao.position(230,30)
+  botao.size(50,50)
+  botao.mouseClicked(cortar)
+
  
   rectMode(CENTER);
+  imageMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50)
 }
@@ -38,15 +62,26 @@ frutalink=new Link(corda,fruta)
 function draw() 
 {
   background(51);
+
+  //IMAGEM DE FUNDA
+  image(bgImg, width/2, height/2, 500, 600);
+
   Engine.update(engine);
 
   solo.display();
   corda.show();
 
   //mostrar a fruta
-   ellipse(fruta.position.x,fruta.position.y,15,15)
+   image(frutaImg,fruta.position.x,fruta.position.y,60,60);
+
+   //mostrar sprites
+   drawSprites();
 }
 
-
+function cortar(){
+  corda.break()
+  frutalink.soltarlink()
+  frutalink=null
+}
 
 
